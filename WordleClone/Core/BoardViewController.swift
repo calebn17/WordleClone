@@ -7,19 +7,20 @@
 
 import UIKit
 
+protocol BoardViewControllerDatasoure: AnyObject {
+    var currentGuesses: [[Character?]] {get}
+}
+
 class BoardViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
-    var guesses: [[Character?]] = Array(
-        repeating: Array(repeating: nil, count: 5),
-        count:6
-    )
+    weak var datasource: BoardViewControllerDatasoure?
     
     let collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.minimumInteritemSpacing = 4
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
-        
+        collectionView.backgroundColor = .clear
         collectionView.register(KeyCell.self, forCellWithReuseIdentifier: KeyCell.identifier)
         return collectionView
     }()
@@ -45,10 +46,11 @@ class BoardViewController: UIViewController, UICollectionViewDelegate, UICollect
 extension BoardViewController {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return guesses.count
+        return datasource?.currentGuesses.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        let guesses = datasource?.currentGuesses ?? []
         return guesses[section].count
     }
     

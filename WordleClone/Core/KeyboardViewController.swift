@@ -7,16 +7,24 @@
 
 import UIKit
 
+protocol KeyboardViewControllerDelegate: AnyObject {
+    func keyboardViewController(_ vc: KeyboardViewController, didTapKey letter: Character)
+}
+
 class KeyboardViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+    
+    weak var delegate: KeyboardViewControllerDelegate?
     
     let letters = ["qwertyuiop", "asdfghjkl", "zxcvbnm"]
     private var keys: [[Character]] = []
     
     let collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
+        //spacing between each item
         layout.minimumInteritemSpacing = 2
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
+        //registering the Key cells to the collectionView
         collectionView.register(KeyCell.self, forCellWithReuseIdentifier: KeyCell.identifier)
         return collectionView
     }()
@@ -34,9 +42,11 @@ class KeyboardViewController: UIViewController, UICollectionViewDelegate, UIColl
             collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             
         ])
-        
+        //
         for row in letters {
+            //seperates each string into an array
             let chars = Array(row)
+            //adds that array to the keys 2D array
             keys.append(chars)
         }
     }
@@ -60,6 +70,7 @@ extension KeyboardViewController {
         return cell
     }
     
+    //sets the size for each cell/item
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
         let margin: CGFloat = 20
@@ -87,6 +98,8 @@ extension KeyboardViewController {
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        //
+        collectionView.deselectItem(at: indexPath, animated: true)
+        let letter = keys[indexPath.section][indexPath.row]
+        delegate?.keyboardViewController(self, didTapKey: letter)
     }
 }

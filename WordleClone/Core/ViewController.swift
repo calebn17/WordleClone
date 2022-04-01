@@ -9,6 +9,11 @@ import UIKit
 
 class ViewController: UIViewController {
     
+    let answer = "after"
+    private var guesses: [[Character?]] = Array(
+        repeating: Array(repeating: nil, count: 5),
+        count:6)
+    
     let keyboardVC = KeyboardViewController()
     let boardVC = BoardViewController()
 
@@ -16,18 +21,25 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .systemGray6
         
+        
         addChildren()
     }
     
     private func addChildren() {
         
+        //adding keyboard and board view controllers as childeren to the home view controller
+        //all these steps are needed to embed one VC to the parent VC
+        
         addChild(keyboardVC)
         keyboardVC.didMove(toParent: self)
+        keyboardVC.delegate = self
+        //tells code to not set automatic constraints
         keyboardVC.view.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(keyboardVC.view)
         
         addChild(boardVC)
         boardVC.didMove(toParent: self)
+        boardVC.datasource = self
         boardVC.view.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(boardVC.view)
         
@@ -52,5 +64,17 @@ class ViewController: UIViewController {
     }
 
 
+}
+
+extension ViewController: KeyboardViewControllerDelegate {
+    func keyboardViewController(_ vc: KeyboardViewController, didTapKey letter: Character) {
+        print(letter)
+    }
+}
+
+extension ViewController: BoardViewControllerDatasoure {
+    var currentGuesses: [[Character?]] {
+        return guesses
+    }
 }
 
