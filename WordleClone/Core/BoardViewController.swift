@@ -15,7 +15,7 @@ class BoardViewController: UIViewController, UICollectionViewDelegate, UICollect
     
     weak var datasource: BoardViewControllerDatasoure?
     
-    let collectionView: UICollectionView = {
+    private let collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.minimumInteritemSpacing = 4
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
@@ -41,6 +41,10 @@ class BoardViewController: UIViewController, UICollectionViewDelegate, UICollect
         
         
     }
+    
+    public func reloadData() {
+        collectionView.reloadData()
+    }
 }
 
 extension BoardViewController {
@@ -61,6 +65,12 @@ extension BoardViewController {
         cell.backgroundColor = nil
         cell.layer.borderWidth = 1
         cell.layer.borderColor = UIColor.systemGray3.cgColor
+        
+        let guesses = datasource?.currentGuesses ?? []
+        if let letter = guesses[indexPath.section][indexPath.row] {
+            cell.configure(with: letter)
+        }
+        
         return cell
     }
     
