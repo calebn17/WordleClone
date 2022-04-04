@@ -11,6 +11,8 @@ protocol BoardViewControllerDatasoure: AnyObject {
     //will pass the characters/cells that the user clicked to the main VC
     //is a get, so will return ...
     var currentGuesses: [[Character?]] {get}
+    
+    func boxColor(at indexPath: IndexPath) -> UIColor?
 }
 
 class BoardViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
@@ -66,7 +68,7 @@ extension BoardViewController {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: KeyCell.identifier, for: indexPath) as? KeyCell else {fatalError()}
         
         //formatting cells
-        cell.backgroundColor = nil
+        cell.backgroundColor = datasource?.boxColor(at: indexPath)
         cell.layer.borderWidth = 1
         cell.layer.borderColor = UIColor.systemGray3.cgColor
         

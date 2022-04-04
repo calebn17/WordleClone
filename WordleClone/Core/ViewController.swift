@@ -9,7 +9,8 @@ import UIKit
 
 class ViewController: UIViewController {
     
-    let answer = "after"
+    let answers = ["there", "ultra", "bloke", "later"]
+    var answer = ""
     private var guesses: [[Character?]] = Array(
         repeating: Array(repeating: nil, count: 5),
         count:6)
@@ -21,6 +22,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .systemGray6
         
+        answer = answers.randomElement() ?? "after"
         
         addChildren()
     }
@@ -33,7 +35,7 @@ class ViewController: UIViewController {
         addChild(keyboardVC)
         keyboardVC.didMove(toParent: self)
         keyboardVC.delegate = self
-        //tells code to not set automatic constraints
+        //tells code to not set automatic constraints so I can format it 
         keyboardVC.view.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(keyboardVC.view)
         
@@ -90,6 +92,26 @@ extension ViewController: BoardViewControllerDatasoure {
     var currentGuesses: [[Character?]] {
         //returns the 2x2 guesses array to the Board VC
         return guesses
+    }
+    
+    func boxColor(at indexPath: IndexPath) -> UIColor? {
+        
+        let rowIndex = indexPath.section
+        let count = guesses[rowIndex].compactMap({ $0 }).count
+        guard count == 5 else {return nil}
+        
+        guard let letter = guesses[indexPath.section][indexPath.row] else {return nil}
+        
+        let indexedAnswer = Array(answer)
+        let typedIndexedAnswer = indexedAnswer[indexPath.row]
+        
+        if typedIndexedAnswer == letter {
+            return .systemGreen
+        } else if indexedAnswer.contains(letter){
+            return .systemOrange
+        } else {
+            return .systemRed
+        }
     }
 }
 
