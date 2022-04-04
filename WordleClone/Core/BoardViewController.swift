@@ -8,6 +8,8 @@
 import UIKit
 
 protocol BoardViewControllerDatasoure: AnyObject {
+    //will pass the characters/cells that the user clicked to the main VC
+    //is a get, so will return ...
     var currentGuesses: [[Character?]] {get}
 }
 
@@ -50,10 +52,12 @@ class BoardViewController: UIViewController, UICollectionViewDelegate, UICollect
 extension BoardViewController {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
+        //returns number of sections or 0 when there arent any
         return datasource?.currentGuesses.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        //if there is anything in the section then return the count, else will be zero
         let guesses = datasource?.currentGuesses ?? []
         return guesses[section].count
     }
@@ -61,11 +65,13 @@ extension BoardViewController {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: KeyCell.identifier, for: indexPath) as? KeyCell else {fatalError()}
         
-        
+        //formatting cells
         cell.backgroundColor = nil
         cell.layer.borderWidth = 1
         cell.layer.borderColor = UIColor.systemGray3.cgColor
         
+        //grabbing the guesses array and pulling the letter that is in the corresponding...
+        //location and placing it in the cell
         let guesses = datasource?.currentGuesses ?? []
         if let letter = guesses[indexPath.section][indexPath.row] {
             cell.configure(with: letter)
@@ -76,14 +82,17 @@ extension BoardViewController {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
+        //setting the size of the individual cell
+        //margin is the total space per row that isnt occupied by the cell
         let margin: CGFloat = 20
+        //calculates the width of the cell
         let size: CGFloat = (collectionView.frame.size.width - margin)/5
-        
+        //cells are sqaures so width and height are the same
         return CGSize(width: size, height: size)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        
+        //sets the insets
         return UIEdgeInsets(top: 2, left: 2, bottom: 2, right: 2)
     }
     

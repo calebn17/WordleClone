@@ -71,6 +71,7 @@ extension ViewController: KeyboardViewControllerDelegate {
         
         var stop = false
         
+        //grabs the letter and places it in the next empty cell on the board starting from left to right and then moving to the next row
         for i in 0 ..< guesses.count {
             for j in 0 ..< guesses[i].count {
                 if guesses[i][j] == nil {
@@ -81,14 +82,13 @@ extension ViewController: KeyboardViewControllerDelegate {
             }
             if stop {break}
         }
-    
-        
         boardVC.reloadData()
     }
 }
 
 extension ViewController: BoardViewControllerDatasoure {
     var currentGuesses: [[Character?]] {
+        //returns the 2x2 guesses array to the Board VC
         return guesses
     }
 }

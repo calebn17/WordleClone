@@ -8,6 +8,7 @@
 import UIKit
 
 protocol KeyboardViewControllerDelegate: AnyObject {
+    //stubs the function that will pass the letter from the keyboard vc to the main vc
     func keyboardViewController(_ vc: KeyboardViewController, didTapKey letter: Character)
 }
 
@@ -31,6 +32,8 @@ class KeyboardViewController: UIViewController, UICollectionViewDelegate, UIColl
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        //always need this when using collection/table views etc!!
         collectionView.delegate = self
         collectionView.dataSource = self
         
@@ -42,7 +45,7 @@ class KeyboardViewController: UIViewController, UICollectionViewDelegate, UIColl
             collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             
         ])
-        //
+        //parses out the letters array and arranges it into a 2x2 array format resembling a keyboard
         for row in letters {
             //seperates each string into an array
             let chars = Array(row)
@@ -54,6 +57,7 @@ class KeyboardViewController: UIViewController, UICollectionViewDelegate, UIColl
 
 extension KeyboardViewController {
     
+    
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return keys.count
     }
@@ -63,10 +67,14 @@ extension KeyboardViewController {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        
+        //creates a reusable cell that is casted as a KeyCell that we created
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: KeyCell.identifier, for: indexPath) as? KeyCell else {fatalError()}
         
+        //places the letter from the corresponding keys array into the cell and formats it as defined by KeyCell
         let letter = keys[indexPath.section][indexPath.row]
         cell.configure(with: letter)
+        
         return cell
     }
     
@@ -79,6 +87,7 @@ extension KeyboardViewController {
         return CGSize(width: size, height: size * 1.5)
     }
     
+    //manages the inset of the collection view
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         
         var left: CGFloat = 1
@@ -97,9 +106,13 @@ extension KeyboardViewController {
         return UIEdgeInsets(top: 2, left: left, bottom: 2, right: right)
     }
     
+    //what happens when the user clicks on a cell in the keyboard
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: true)
+        
+        //grabs the letter in the cell that the user clicked
         let letter = keys[indexPath.section][indexPath.row]
+        //passes that letter over to the VC
         delegate?.keyboardViewController(self, didTapKey: letter)
     }
 }
